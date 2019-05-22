@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_transactions"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/daily_transactions" />
+        <item
+            android:id="@+id/nav_debts"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/debts" />
+
+        <item
+            android:id="@+id/nav_balanceSheet"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/balance_sheet" />
+    </group>
+
+    <item android:title="Extras">
+        <menu>
+            <item
+                android:id="@+id/nav_list"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/my_shopping_list" />
+        </menu>
+    </item>
+
+</menu>
