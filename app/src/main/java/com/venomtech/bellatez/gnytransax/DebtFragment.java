@@ -192,7 +192,7 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     private void showActionsDialog(final int position) {
 
-        CharSequence colors[] = new CharSequence[]{"Call", "Edit", "Delete"};
+        CharSequence colors[] = new CharSequence[]{"Call", "Edit", "Paid"};
         final String contact_number = debtList.get(position).getContact();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

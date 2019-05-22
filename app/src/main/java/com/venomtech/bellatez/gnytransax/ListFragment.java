@@ -88,12 +88,12 @@ public class ListFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(),recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, final int position) {
-                showActionsDialog(position);
+
             }
 
             @Override
             public void onLongClick(View view, int position) {
-
+                showActionsDialog(position);
             }
         }));
 
