@@ -138,7 +138,7 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
                     Toast.makeText(getActivity(), R.string.validation, Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-//                    fetchData(from.getText().toString(), to.getText().toString());
+                    fetchData(from.getText().toString(), to.getText().toString());
                     bsheet.setVisibility(view.VISIBLE);
                     downloadBtn.setVisibility(view.VISIBLE);
                     Toast.makeText(getActivity(), R.string.save, Toast.LENGTH_SHORT).show();
@@ -149,6 +149,24 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
     }
 
     private void fetchData(String start, String end){
+
+
+//        return format.format(new Date(time));
+        Cursor c = db.bsheetData(start, end);
+        int total_income = 0;
+        int total_expense = 0;
+        int days_count = 0;
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                total_income += c.getInt(1);
+                total_expense += c.getInt(2);
+                days_count +=1;
+            } while (c.moveToNext());
+        }
+        loss_gain(total_income, total_expense);
+        days.setText(String.format("%,d", days_count));
 
     }
 
@@ -196,31 +214,16 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
         int tag = ((Integer)view.getTag());
         long date_from = 0;
         long date_to = 0;
+        String new_from = "";
+        String new_to = "";
 
         if(tag == Date_from){
             from.setText(date);
-            date_from = calendar.getTimeInMillis();
             start_date.setText(date);
         } else if(tag == Date_to){
             to.setText(date);
-            date_to = calendar.getTimeInMillis();
+            new_to = to.getText().toString();
             end_date.setText(date);
         }
-
-
-        Cursor c = db.bsheetData(date_from, date_to);
-        int total_income = 0;
-        int total_expense = 0;
-        int days_count = 0;
-
-        // looping through all rows and adding to list
-        if (c.moveToFirst()) {
-            do {
-                total_income += c.getInt(1);
-                total_expense += c.getInt(2);
-                days_count +=1;
-            } while (c.moveToNext());
-        }
-        loss_gain(total_income, total_expense);
     }
 }

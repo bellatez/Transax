@@ -1,11 +1,8 @@
 package com.venomtech.bellatez.gnytransax;
 
 import android.Manifest;
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.venomtech.bellatez.gnytransax.Adapter.DebtAdapter;
+import com.venomtech.bellatez.gnytransax.Adapter.LoanAdapter;
 import com.venomtech.bellatez.gnytransax.Database.DatabaseHelper;
 import com.venomtech.bellatez.gnytransax.Database.model.Debt;
 import com.venomtech.bellatez.gnytransax.utils.MyDividerItemDecoration;
@@ -40,9 +38,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
-    private DebtAdapter debtAdapter;
+    private LoanAdapter LoanAdapter;
     private List<Debt> debtList = new ArrayList<>();
     private DatabaseHelper db;
 
@@ -57,7 +55,7 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
     RecyclerView recyclerView;
     TextView dialogheading;
 
-    public DebtFragment() {
+    public LoanFragment() {
         // Required empty public constructor
     }
 
@@ -70,7 +68,7 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_debt, container, false);
+        return inflater.inflate(R.layout.fragment_loan, container, false);
 
     }
 
@@ -83,12 +81,12 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new MyDividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 16));
 
-        debtAdapter = new DebtAdapter(getActivity(), debtList);
-        recyclerView.setAdapter(debtAdapter);
+        LoanAdapter = new LoanAdapter(getActivity(), debtList);
+        recyclerView.setAdapter(LoanAdapter);
 
         msg_no_data = v.findViewById(R.id.empty_data_view);
         db = new DatabaseHelper(getActivity());
-        debtList.addAll(db.getAllDebts());
+        debtList.addAll(db.getAllLoans());
 
 
 
@@ -118,7 +116,7 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     private void showListDialog(final boolean shouldUpdate, final Debt debt, final int position) {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getActivity().getApplicationContext());
-        View v = layoutInflaterAndroid.inflate(R.layout.dialog_debts, null);
+        View v = layoutInflaterAndroid.inflate(R.layout.dialog_loan, null);
 
         debtor_name = v.findViewById(R.id.debtor_name);
         amnt = v.findViewById(R.id.amnt);
@@ -242,7 +240,7 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
     }
 
     private void createItem(String name, int amount, String contact, String date) {
-        long id = db.insertDebt(name, amount, contact, date);
+        long id = db.insertLoan(name, amount, contact, date);
 
         // get the newly inserted note from db
         Debt debt = db.getDebt(id);
@@ -251,7 +249,7 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
             // adding new note to array list at 0 position
             debtList.add(0, debt);
 
-            debtAdapter.notifyDataSetChanged();
+            LoanAdapter.notifyDataSetChanged();
 
             toggleEmptyList();
         }
@@ -269,7 +267,7 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
 
         debtList.set(position, debt);
 
-        debtAdapter.notifyDataSetChanged();
+        LoanAdapter.notifyDataSetChanged();
 
         toggleEmptyList();
     }
@@ -280,7 +278,7 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
 
         // removing the note from the list
         debtList.remove(position);
-        debtAdapter.notifyItemRemoved(position);
+        LoanAdapter.notifyItemRemoved(position);
 
         toggleEmptyList();
     }

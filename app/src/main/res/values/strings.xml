@@ -48,4 +48,5 @@
     <string name="days">Number of Days</string>
     <string name="Loss">Loss</string>
     <string name="saveData">Save this Sheet in Storage</string>
+    <string name="loans">Loans</string>
 </resources>

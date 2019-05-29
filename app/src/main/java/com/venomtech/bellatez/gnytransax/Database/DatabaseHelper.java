@@ -120,12 +120,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return trans;
     }
 
-    public Cursor bsheetData(long from, long to){
+    public Cursor bsheetData(String from, String to){
 
-            String selectQuery = "SELECT  * FROM " + DailyTransaction.TABLE_NAME+ " WHERE "+ DailyTransaction.COLUMN_TIMESTAMP+ " BETWEEN "+from+"  AND "+to;
-            SQLiteDatabase db = this.getReadableDatabase();
-            Cursor c = db.rawQuery(selectQuery, null);
-            return c;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM "+ DailyTransaction.TABLE_NAME +
+                " WHERE " + DailyTransaction.COLUMN_TIMESTAMP +
+                " BETWEEN ?  AND ?", new String[]{from, to});
+        return c;
 
 //        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 //        try {
@@ -140,7 +141,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //            Cursor c = db.rawQuery(selectQuery, null);
 //            return c;
         }
-    }
+
 
     //count the number of transactions
     public int getTransactionCount() {
@@ -173,6 +174,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Debt.COLUMN_NAME, name);
         values.put(Debt.COLUMN_AMOUNT, amount);
         values.put(Debt.COLUMN_CONTACT, contact);
+        values.put(Debt.COLUMN_TYPE, 0);
         values.put(Debt.COLUMN_DUEDATE, date);
 
         long id = db.insert(Debt.TABLE_NAME, null, values);
@@ -212,7 +214,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * */
     public List<Debt> getAllDebts() {
         List<Debt> trans = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + Debt.TABLE_NAME+ " ORDER BY " +
+        String selectQuery = "SELECT  * FROM " + Debt.TABLE_NAME+ " WHERE "+ Debt.COLUMN_TYPE+ "="+0 +" ORDER BY " +
                 Debt.COLUMN_TIMESTAMP + " DESC";
 
 
@@ -253,7 +255,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //count the number of debts
     public int getDebtCount() {
-        String countQuery = "SELECT  * FROM " + Debt.TABLE_NAME;
+        String countQuery = "SELECT  * FROM " + Debt.TABLE_NAME+ " WHERE "+ Debt.COLUMN_TYPE+ "="+ 0;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
 
@@ -266,9 +268,71 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //delete debt
     public void deleteDebt(Debt debt) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(Debt.TABLE_NAME, Debt.COLUMN_ID + " = ?",
+        db.delete(Debt.TABLE_NAME, Debt.COLUMN_ID + " = ? ",
                 new String[]{String.valueOf(debt.getId())});
         db.close();
+    }
+
+//    LOAN CRUD
+
+    //create debt
+    public long insertLoan(String name, int amount, String contact, String date) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(Debt.COLUMN_NAME, name);
+        values.put(Debt.COLUMN_AMOUNT, amount);
+        values.put(Debt.COLUMN_CONTACT, contact);
+        values.put(Debt.COLUMN_TYPE, 1);
+        values.put(Debt.COLUMN_DUEDATE, date);
+
+        long id = db.insert(Debt.TABLE_NAME, null, values);
+
+        db.close();
+        return id;
+    }
+
+    /**
+     * getting all debts
+     * */
+    public List<Debt> getAllLoans() {
+        List<Debt> trans = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " + Debt.TABLE_NAME+ " WHERE "+ Debt.COLUMN_TYPE+ "="+1 +" ORDER BY " +
+                Debt.COLUMN_TIMESTAMP + " DESC";
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Debt td = new Debt();
+                td.setId(c.getInt(c.getColumnIndex(Debt.COLUMN_ID)));
+                td.setName(c.getString(c.getColumnIndex(Debt.COLUMN_NAME)));
+                td.setContact(c.getString(c.getColumnIndex(Debt.COLUMN_CONTACT)));
+                td.setAmount((c.getInt(c.getColumnIndex(Debt.COLUMN_AMOUNT))));
+                td.setDuedate(c.getString(c.getColumnIndex(Debt.COLUMN_DUEDATE)));
+                td.setTimestamp(c.getString(c.getColumnIndex(Debt.COLUMN_TIMESTAMP)));
+
+                trans.add(td);
+            } while (c.moveToNext());
+        }
+        db.close();
+        return trans;
+    }
+
+    //count the number of debts
+    public int getLoanCount() {
+        String countQuery = "SELECT  * FROM " + Debt.TABLE_NAME+ " WHERE "+ Debt.COLUMN_TYPE+ "="+ 1;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+
+        return count;
     }
 
     // ShoppingList CRUD
@@ -352,7 +416,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //delete list item
     public void deleteListItem(ShoppingList list) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(ShoppingList.TABLE_NAME, Debt.COLUMN_ID + " = ?",
+        db.delete(ShoppingList.TABLE_NAME, Debt.COLUMN_ID + " = ? ",
                 new String[]{String.valueOf(list.getId())});
         db.close();
     }

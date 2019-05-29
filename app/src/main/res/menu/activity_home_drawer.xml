@@ -13,6 +13,10 @@
             android:title="@string/debts" />
 
         <item
+            android:id="@+id/nav_loans"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/loans" />
+        <item
             android:id="@+id/nav_balanceSheet"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/balance_sheet" />

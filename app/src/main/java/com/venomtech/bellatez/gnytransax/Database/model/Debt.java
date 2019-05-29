@@ -2,19 +2,21 @@ package com.venomtech.bellatez.gnytransax.Database.model;
 
 public class Debt {
 
-    public static final String TABLE_NAME = "notes";
+    public static final String TABLE_NAME = "debts";
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_AMOUNT = "amount";
     public static final String COLUMN_CONTACT = "contact";
     public static final String COLUMN_DUEDATE = "duedate";
+    public static final String COLUMN_TYPE = "type";
     public static final String COLUMN_TIMESTAMP = "timestamp";
 
     private int id;
     private String name;
     private String contact;
     private int amount;
+    private int type;
     private String duedate;
     private String timestamp;
 
@@ -27,6 +29,7 @@ public class Debt {
                     + COLUMN_AMOUNT + " INTEGER,"
                     + COLUMN_CONTACT + " TEXT,"
                     + COLUMN_DUEDATE + " DATE,"
+                    + COLUMN_TYPE + " int,"
                     + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP"
                     + ")";
 
@@ -88,5 +91,13 @@ public class Debt {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

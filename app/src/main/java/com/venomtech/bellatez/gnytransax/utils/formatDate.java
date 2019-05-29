@@ -18,11 +18,11 @@ public class formatDate {
      * Input: 2018-02-21 00:15:42
      * Output: Feb 21
      */
-    public String formatDate(String dateStr) {
+    public static String formatDate(String dateStr) {
         try {
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = fmt.parse(dateStr);
-            SimpleDateFormat fmtOut = new SimpleDateFormat("MMM d");
+            SimpleDateFormat fmtOut = new SimpleDateFormat("EE MMM d");
             return fmtOut.format(date);
         } catch (ParseException e) {
 

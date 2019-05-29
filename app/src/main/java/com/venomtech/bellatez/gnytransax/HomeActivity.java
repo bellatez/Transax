@@ -53,6 +53,9 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_debts:
                 fragment = new DebtFragment();
                 break;
+            case R.id.nav_loans:
+                fragment = new LoanFragment();
+                break;
             case R.id.nav_list:
                 fragment = new ListFragment();
                 break;
