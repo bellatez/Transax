@@ -20,7 +20,7 @@ public class DailyTransaction {
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_INCOME + " INTEGER,"
                     + COLUMN_EXPENSE + " INTEGER,"
-                    + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP"
+                    + COLUMN_TIMESTAMP + " TEXT"
                     + ")";
 
     public DailyTransaction(int id, int income, int expense, String timestamp) {

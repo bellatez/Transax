@@ -61,7 +61,7 @@ public class DebtAdapter extends RecyclerView.Adapter<DebtAdapter.MyViewHolder> 
         holder.name.setText( debt.getName());
         holder.contact.setText(number);
         holder.amount.setText(amnt+" xaf");
-        holder.duedate.setText(debt.getDuedate());
+        holder.duedate.setText(date.formatDate(debt.getDuedate()));
 
     }
 

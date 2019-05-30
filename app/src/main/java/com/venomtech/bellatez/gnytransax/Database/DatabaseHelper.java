@@ -10,7 +10,9 @@ import android.util.Log;
 import com.venomtech.bellatez.gnytransax.Database.model.DailyTransaction;
 import com.venomtech.bellatez.gnytransax.Database.model.Debt;
 import com.venomtech.bellatez.gnytransax.Database.model.ShoppingList;
+import com.venomtech.bellatez.gnytransax.utils.formatDate;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,6 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         values.put(DailyTransaction.COLUMN_INCOME, income);
         values.put(DailyTransaction.COLUMN_EXPENSE, expense);
+        values.put(DailyTransaction.COLUMN_TIMESTAMP, getDateTime());
 
         long id = db.insert(DailyTransaction.TABLE_NAME, null, values);
 
@@ -123,24 +126,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor bsheetData(String from, String to){
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM "+ DailyTransaction.TABLE_NAME +
-                " WHERE " + DailyTransaction.COLUMN_TIMESTAMP +
-                " BETWEEN ?  AND ?", new String[]{from, to});
-        return c;
 
-//        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-//        try {
-//            Date mDate = sdf.parse(DailyTransaction.COLUMN_TIMESTAMP);
-//            long timeInMilliseconds = mDate.getTime();
-//            Log.e("testdate", "bsheetData: "+timeInMilliseconds );
-//        } catch (ParseException e) {
-//            e.printStackTrace();;
-//            String selectQuery = "SELECT  * FROM " + DailyTransaction.TABLE_NAME;
-//
-//            SQLiteDatabase db = this.getReadableDatabase();
-//            Cursor c = db.rawQuery(selectQuery, null);
-//            return c;
-        }
+        String selectQuery = "SELECT * FROM "+ DailyTransaction.TABLE_NAME + " WHERE " + DailyTransaction.COLUMN_TIMESTAMP + " BETWEEN '" + from +"' AND '"+ to+"'";
+        Cursor c = db.rawQuery(selectQuery, null);
+        return c;
+    }
+
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+//    private static String dateOnly(java.util.Date d) {
+//        Calendar cal = Calendar.getInstance(); // locale-specific
+//        cal.setTime(d);
+//        cal.set(Calendar.HOUR_OF_DAY, 0);
+//        cal.set(Calendar.MINUTE, 0);
+//        cal.set(Calendar.SECOND, 0);
+//        cal.set(Calendar.MILLISECOND, 0);
+//        return Long.toString(cal.getTimeInMillis());
+//    }
 
 
     //count the number of transactions

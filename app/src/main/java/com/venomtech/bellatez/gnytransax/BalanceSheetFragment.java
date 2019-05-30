@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import com.venomtech.bellatez.gnytransax.Database.DatabaseHelper;
 import com.venomtech.bellatez.gnytransax.Database.model.DailyTransaction;
+import com.venomtech.bellatez.gnytransax.utils.formatDate;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -208,17 +210,16 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        String date = dayOfMonth + "/" + (month + 1) + "/" + year;
-        Calendar calendar = new GregorianCalendar(year, month, dayOfMonth);
+
+        String date = dayOfMonth+"-"+(month+1)+"-"+year;
 
         int tag = ((Integer)view.getTag());
-        long date_from = 0;
-        long date_to = 0;
         String new_from = "";
         String new_to = "";
 
         if(tag == Date_from){
             from.setText(date);
+            Log.d("date", "onDateSet:"+ date);
             start_date.setText(date);
         } else if(tag == Date_to){
             to.setText(date);

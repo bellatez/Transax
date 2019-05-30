@@ -57,7 +57,7 @@ public class LoanAdapter extends RecyclerView.Adapter<LoanAdapter.MyViewHolder> 
         String amnt = String.format("%,d", debt.getAmount());
         String number = PhoneNumberUtils.formatNumber(debt.getContact());
 
-        holder.timestamp.setText(date.formatDate(debt.getTimestamp()));
+        holder.timestamp.setText(debt.getTimestamp());
         holder.name.setText( debt.getName());
         holder.contact.setText(number);
         holder.amount.setText(amnt+" xaf");
