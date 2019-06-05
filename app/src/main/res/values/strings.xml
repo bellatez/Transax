@@ -6,9 +6,9 @@
     <string name="nav_header_subtitle">Manage your sales account with Ease</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="daily_transactions">Daily Transactions</string>
-    <string name="debts">Debts</string>
-    <string name="balance_sheet">Balance Sheet</string>
+    <string name="daily_transactions">Daily Sales</string>
+    <string name="debts">My Debtors</string>
+    <string name="balance_sheet">Sales Income Statement</string>
     <string name="share">Share</string>
     <string name="my_shopping_list">My Shopping List</string>
 
@@ -18,13 +18,13 @@
     <string name="contact">Contact: </string>
     <string name="amount">Amount: </string>
     <string name="name">Name: </string>
-    <string name="msg_no_notes">Press the + button to Create</string>
+    <string name="msg_no_notes">+ Create New</string>
     <string name="new_list_title">Create new</string>
     <string name="edit_list_title">Edit</string>
     <string name="new_debt_title">Create New Debt</string>
     <string name="new_transaction_title">Create new Daily Transaction</string>
 
-    <string name="warningAlert">All your data will be lost</string>
+    <string name="warningAlert">This action cannot be undone</string>
     <string name="delete">Delete</string>
     <string name="deleteRequest">Are you sure you want to Delete?</string>
     <string name="validation">Please fill all the fields</string>
@@ -48,5 +48,5 @@
     <string name="days">Number of Days</string>
     <string name="Loss">Loss</string>
     <string name="saveData">Save this Sheet in Storage</string>
-    <string name="loans">Loans</string>
+    <string name="loans">My Loans</string>
 </resources>

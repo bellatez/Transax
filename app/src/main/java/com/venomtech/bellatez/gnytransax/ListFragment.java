@@ -1,5 +1,6 @@
 package com.venomtech.bellatez.gnytransax;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,8 +41,9 @@ public class ListFragment extends Fragment {
     EditText item;
     EditText quantity;
     TextView dialogheading;
-    TextView msg_no_data;
+    Button msg_no_data;
     RecyclerView recyclerView;
+    FloatingActionButton createBtn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,8 +80,14 @@ public class ListFragment extends Fragment {
          * Edit and Delete
          * */
 
-        FloatingActionButton createBtn = v.findViewById(R.id.createBtn);
+        createBtn = v.findViewById(R.id.createBtn);
         createBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showListDialog(false, null, -1);
+            }
+        });
+        msg_no_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showListDialog(false, null, -1);
@@ -228,12 +237,15 @@ public class ListFragment extends Fragment {
         toggleEmptyList();
     }
 
+    @SuppressLint("RestrictedApi")
     private void toggleEmptyList() {
 
         if (db.getListCount() > 0) {
-           msg_no_data.setVisibility(View.GONE);
+            msg_no_data.setVisibility(View.GONE);
+            createBtn.setVisibility(View.VISIBLE);
         } else {
             msg_no_data.setVisibility(View.VISIBLE);
+            createBtn.setVisibility(View.GONE);
         }
     }
 

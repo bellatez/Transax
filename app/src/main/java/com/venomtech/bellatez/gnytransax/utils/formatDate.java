@@ -21,9 +21,9 @@ public class formatDate {
      */
     public static String formatDate(String dateStr) {
         try {
-            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             Date date = fmt.parse(dateStr);
-            SimpleDateFormat fmtOut = new SimpleDateFormat("MMM d, yyyy");
+            SimpleDateFormat fmtOut = new SimpleDateFormat(" E, d MMM yyyy");
             return fmtOut.format(date);
         } catch (ParseException e) {
 
@@ -32,19 +32,31 @@ public class formatDate {
         return "";
     }
 
-    public static String dateOnly(java.util.Date d) {
-        Calendar cal = Calendar.getInstance(); // locale-specific
-        cal.setTime(d);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return Long.toString(cal.getTimeInMillis());
+    public static String formatDate2(String dateStr) {
+        try {
+            SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = fmt.parse(dateStr);
+            SimpleDateFormat fmtOut = new SimpleDateFormat(" E, d MMM yyyy");
+            return fmtOut.format(date);
+        } catch (ParseException e) {
+
+        }
+
+        return "";
     }
 
-    public static Date convertDate(String dateStr) throws ParseException {
-        DateFormat formatter = new SimpleDateFormat("d-MMM-yyyy");
-        Date date = formatter.parse(dateStr);
-        return date;
+    public static String formatDate3(String dateStr) {
+        try {
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-M-d HH:mm:ss");
+            Date date = fmt.parse(dateStr);
+            SimpleDateFormat fmtOut = new SimpleDateFormat(" E, d MMM yyyy");
+            return fmtOut.format(date);
+        } catch (ParseException e) {
+
+        }
+
+        return "";
     }
+
+
 }

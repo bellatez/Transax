@@ -123,31 +123,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return trans;
     }
 
-    public Cursor bsheetData(String from, String to){
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String selectQuery = "SELECT * FROM "+ DailyTransaction.TABLE_NAME + " WHERE " + DailyTransaction.COLUMN_TIMESTAMP + " BETWEEN '" + from +"' AND '"+ to+"'";
-        Cursor c = db.rawQuery(selectQuery, null);
-        return c;
-    }
-
-    private String getDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        Date date = new Date();
-        return dateFormat.format(date);
-    }
-
-//    private static String dateOnly(java.util.Date d) {
-//        Calendar cal = Calendar.getInstance(); // locale-specific
-//        cal.setTime(d);
-//        cal.set(Calendar.HOUR_OF_DAY, 0);
-//        cal.set(Calendar.MINUTE, 0);
-//        cal.set(Calendar.SECOND, 0);
-//        cal.set(Calendar.MILLISECOND, 0);
-//        return Long.toString(cal.getTimeInMillis());
-//    }
-
 
     //count the number of transactions
     public int getTransactionCount() {
@@ -329,7 +304,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return trans;
     }
 
-    //count the number of debts
+    //count the number of loans
     public int getLoanCount() {
         String countQuery = "SELECT  * FROM " + Debt.TABLE_NAME+ " WHERE "+ Debt.COLUMN_TYPE+ "="+ 1;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -438,5 +413,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return count;
     }
+
+    public Cursor bsheetData(String from, String to){
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM "+ DailyTransaction.TABLE_NAME + " WHERE " + DailyTransaction.COLUMN_TIMESTAMP + " BETWEEN '" + from +" 00:00:00' AND '"+ to+" 23:59:59'";
+        Cursor c = db.rawQuery(selectQuery, null);
+        return c;
+    }
+
+
+// method to convert the transaction date from the datepicker to full datetime to store in transactions table
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
 
 }

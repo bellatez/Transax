@@ -1,6 +1,7 @@
 package com.venomtech.bellatez.gnytransax;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -21,6 +22,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -51,9 +53,10 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
     EditText amnt;
     EditText contact_data;
     EditText duedate;
-    TextView msg_no_data;
+    Button msg_no_data;
     RecyclerView recyclerView;
     TextView dialogheading;
+    FloatingActionButton createBtn;
 
     public LoanFragment() {
         // Required empty public constructor
@@ -103,8 +106,15 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
         }));
 
 
-        FloatingActionButton createBtn = v.findViewById(R.id.createBtn);
+        createBtn = v.findViewById(R.id.createBtn);
         createBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showListDialog(false, null, -1);
+            }
+        });
+
+        msg_no_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showListDialog(false, null, -1);
@@ -283,12 +293,15 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
         toggleEmptyList();
     }
 
+    @SuppressLint("RestrictedApi")
     private void toggleEmptyList() {
 
-        if (db.getDebtCount() > 0) {
+        if (db.getLoanCount() > 0) {
             msg_no_data.setVisibility(View.GONE);
+            createBtn.setVisibility(View.VISIBLE);
         } else {
             msg_no_data.setVisibility(View.VISIBLE);
+            createBtn.setVisibility(View.GONE);
         }
     }
 
@@ -316,7 +329,7 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-        String date = dayOfMonth + "/" + month + "/" + year;
+        String date = dayOfMonth + "-" + (month+1) + "-" + year;
 
         duedate.setText(date);
     }

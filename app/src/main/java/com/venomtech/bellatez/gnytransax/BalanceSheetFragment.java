@@ -1,5 +1,6 @@
 package com.venomtech.bellatez.gnytransax;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,10 +48,11 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
     TextView income;
     TextView expense;
     TextView profitview;
-    TextView percent_profitview;
+    Button transaction;
     TextView lossview;
     CardView bsheet;
-    Button downloadBtn;
+    Button createNew;
+    FloatingActionButton createBtn;
 
     private DatabaseHelper db;
 
@@ -65,6 +67,7 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
         return inflater.inflate(R.layout.fragment_balance_sheeet, container, false);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -75,18 +78,38 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
         income = view.findViewById(R.id.total_income);
         expense = view.findViewById(R.id.total_expense);
         profitview = view.findViewById(R.id.profit);
-        percent_profitview = view.findViewById(R.id.percent_profit);
         lossview = view.findViewById(R.id.loss);
         bsheet = view.findViewById(R.id.bsheet);
-        downloadBtn = view.findViewById(R.id.downloadBtn);
+        createNew = view.findViewById(R.id.empty_data_view);
+        transaction = view.findViewById(R.id.transactions);
+
 
         db = new DatabaseHelper(getActivity());
 
-        FloatingActionButton createBtn = view.findViewById(R.id.createBtn);
+        createBtn = view.findViewById(R.id.createBtn);
+        createBtn.setVisibility(View.GONE);
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDateDialog(null);
+            }
+        });
+
+        createNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateDialog(null);
+            }
+        });
+
+        transaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TransactionFragment nextFrag= new TransactionFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_holder, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }
@@ -133,6 +156,7 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
         alertDialog.show();
 
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View v) {
                 // Show toast message when no text is entered
@@ -142,7 +166,9 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
                 } else {
                     fetchData(from.getText().toString(), to.getText().toString());
                     bsheet.setVisibility(view.VISIBLE);
-                    downloadBtn.setVisibility(view.VISIBLE);
+                    createBtn.setVisibility(View.VISIBLE);
+                    createNew.setVisibility(View.GONE);
+
                     Toast.makeText(getActivity(), R.string.save, Toast.LENGTH_SHORT).show();
                     alertDialog.dismiss();
                 }
@@ -211,20 +237,30 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-        String date = dayOfMonth+"-"+(month+1)+"-"+year;
+        String date = "";
 
+        if (dayOfMonth < 10 && (month+1) < 10){
+            date = "0"+dayOfMonth+"-0"+(month+1)+"-"+year;
+        } else if ((month+1) < 10){
+            date = dayOfMonth+"-0"+(month+1)+"-"+year;
+        } else if(dayOfMonth < 10){
+            date = "0"+dayOfMonth+"-"+(month+1)+"-"+year;
+        } else{
+            date = dayOfMonth+"-"+(month+1)+"-"+year;
+        }
+
+        formatDate dateFormat = new formatDate();
         int tag = ((Integer)view.getTag());
         String new_from = "";
         String new_to = "";
 
         if(tag == Date_from){
             from.setText(date);
-            Log.d("date", "onDateSet:"+ date);
-            start_date.setText(date);
+            start_date.setText(dateFormat.formatDate2(date));
         } else if(tag == Date_to){
             to.setText(date);
             new_to = to.getText().toString();
-            end_date.setText(date);
+            end_date.setText(dateFormat.formatDate2(date));
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.venomtech.bellatez.gnytransax;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,8 +46,10 @@ public class TransactionFragment extends Fragment {
     TextView expense_data;
     TextView timestamp;
     TextView dialogheading;
-    TextView msg_no_data;
+    Button msg_no_data;
+    Button generateSheet;
     RecyclerView recyclerView;
+    FloatingActionButton createBtn;
 
 
     public TransactionFragment() {
@@ -76,15 +80,19 @@ public class TransactionFragment extends Fragment {
 
         transactionAdapter = new DailyTransactionAdapter(getActivity(), transactionList);
         recyclerView.setAdapter(transactionAdapter);
+        transactionList.clear();
 
         income_data=v.findViewById(R.id.income_data);
         expense_data = v.findViewById(R.id.expense_data);
         msg_no_data = v.findViewById(R.id.empty_data_view);
         timestamp = v.findViewById(R.id.timestamp);
+        generateSheet = v.findViewById(R.id.generateSheet);
 
 
         db = new DatabaseHelper(getActivity());
+
         transactionList.addAll(db.getAllTransactions());
+
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(),recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
@@ -97,9 +105,27 @@ public class TransactionFragment extends Fragment {
             }
         }));
 
+        generateSheet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BalanceSheetFragment nextFrag= new BalanceSheetFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_holder, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
-        FloatingActionButton createBtn = v.findViewById(R.id.createBtn);
+
+        createBtn = v.findViewById(R.id.createBtn);
         createBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showListDialog(null);
+            }
+        });
+
+        msg_no_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showListDialog(null);
@@ -183,6 +209,7 @@ public class TransactionFragment extends Fragment {
 
             transactionAdapter.notifyDataSetChanged();
 
+
             toggleEmptyList();
         }
     }
@@ -198,12 +225,18 @@ public class TransactionFragment extends Fragment {
         toggleEmptyList();
     }
 
+    @SuppressLint("RestrictedApi")
     private void toggleEmptyList() {
 
         if (db.getTransactionCount() > 0) {
             msg_no_data.setVisibility(View.GONE);
+            generateSheet.setVisibility(View.VISIBLE);
+            createBtn.setVisibility(View.VISIBLE);
         } else {
             msg_no_data.setVisibility(View.VISIBLE);
+            generateSheet.setVisibility(View.GONE);
+            createBtn.setVisibility(View.GONE);
         }
+
     }
 }
