@@ -66,6 +66,8 @@ public class HomeActivity extends AppCompatActivity
         if(fragment != null){
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_holder, fragment);
+//            to prevent fragment overlapping on back press
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
 

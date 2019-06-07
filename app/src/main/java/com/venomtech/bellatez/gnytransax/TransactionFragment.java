@@ -105,6 +105,7 @@ public class TransactionFragment extends Fragment {
             }
         }));
 
+//        from to the generate sheet fragment
         generateSheet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
