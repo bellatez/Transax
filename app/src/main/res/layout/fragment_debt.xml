@@ -6,6 +6,7 @@
     tools:context=".DebtFragment">
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -15,6 +16,30 @@
         android:textColor="@color/colorAccent"
         android:textSize="@dimen/lbl_new_note_title" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/dimen_10"
+        android:weightSum="2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/total_owed"
+            android:textSize="@dimen/note_list_text" />
+
+        <TextView
+            android:id="@+id/total_owed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/note_list_text"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
@@ -23,9 +48,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
-        android:padding="5dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginTop="50dp" />
+        android:layout_marginTop="104dp"
+        android:padding="5dp" />
 
     <Button
         android:id="@+id/empty_data_view"

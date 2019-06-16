@@ -57,6 +57,7 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
     RecyclerView recyclerView;
     TextView dialogheading;
     FloatingActionButton createBtn;
+    TextView amount_owing;
 
     public LoanFragment() {
         // Required empty public constructor
@@ -87,13 +88,15 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
         LoanAdapter = new LoanAdapter(getActivity(), debtList);
         recyclerView.setAdapter(LoanAdapter);
 
+        debtList.clear();
+
+        amount_owing = v.findViewById(R.id.total_owing);
         msg_no_data = v.findViewById(R.id.empty_data_view);
         db = new DatabaseHelper(getActivity());
         debtList.addAll(db.getAllLoans());
 
 
-
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(),recyclerView, new RecyclerTouchListener.ClickListener() {
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, final int position) {
                 showActionsDialog(position);
@@ -130,11 +133,11 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
 
         debtor_name = v.findViewById(R.id.debtor_name);
         amnt = v.findViewById(R.id.amnt);
-        contact_data=v.findViewById(R.id.contact_data);
+        contact_data = v.findViewById(R.id.contact_data);
         duedate = v.findViewById(R.id.duedate);
         dialogheading = v.findViewById(R.id.dialog_title);
-        dialogheading.setText(!shouldUpdate ? getString(R.string.new_list_title) : getString(R.string.edit_list_title));
 
+        dialogheading.setText(!shouldUpdate ? getString(R.string.new_list_title) : getString(R.string.edit_list_title));
         duedate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,9 +177,9 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
             public void onClick(View v) {
                 // Show toast message when no text is entered
                 if (TextUtils.isEmpty(debtor_name.getText().toString()) &&
-                    TextUtils.isEmpty(amnt.getText().toString())&&
-                    TextUtils.isEmpty(contact_data.getText().toString())&&
-                    TextUtils.isEmpty(duedate.getText().toString())) {
+                        TextUtils.isEmpty(amnt.getText().toString()) &&
+                        TextUtils.isEmpty(contact_data.getText().toString()) &&
+                        TextUtils.isEmpty(duedate.getText().toString())) {
                     Toast.makeText(getActivity(), R.string.validation, Toast.LENGTH_SHORT).show();
                     return;
                 } else {
@@ -185,13 +188,13 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
                 // check if user updating note
                 if (shouldUpdate && debt != null) {
                     // update note by it's id
-                    updateItem(debtor_name.getText().toString() ,
+                    updateItem(debtor_name.getText().toString(),
                             Integer.parseInt(amnt.getText().toString()),
                             contact_data.getText().toString(),
                             duedate.getText().toString(), position);
                     Toast.makeText(getActivity(), R.string.updated, Toast.LENGTH_SHORT).show();
                 } else {
-                    createItem(debtor_name.getText().toString() ,
+                    createItem(debtor_name.getText().toString(),
                             Integer.parseInt(amnt.getText().toString()),
                             contact_data.getText().toString(),
                             duedate.getText().toString());
@@ -212,37 +215,35 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
-                 try {
+                    try {
                         Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:"+ contact_number));
-                     if (ActivityCompat.checkSelfPermission( getActivity(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                         startActivity(callIntent);
-                     }
-                     else {
-                         ActivityCompat.requestPermissions(
-                                 getActivity(),
-                                 new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CODE);
-                     }
-                    }
-                    catch (ActivityNotFoundException activityException) {
+                        callIntent.setData(Uri.parse("tel:" + contact_number));
+                        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                            startActivity(callIntent);
+                        } else {
+                            ActivityCompat.requestPermissions(
+                                    getActivity(),
+                                    new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CODE);
+                        }
+                    } catch (ActivityNotFoundException activityException) {
                         Toast.makeText(getActivity(), R.string.callFail, Toast.LENGTH_LONG).show();
                     }
                 } else if (which == 1) {
                     showListDialog(true, debtList.get(position), position);
                 } else {
                     new AlertDialog.Builder(getActivity())
-                    .setTitle(R.string.deleteRequest)
-                    .setMessage(R.string.warningAlert)
-                    .setCancelable(true)
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            deleteItem(position);
-                            Toast.makeText(getActivity(), R.string.truncated, Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .show();
+                            .setTitle(R.string.deleteRequest)
+                            .setMessage(R.string.warningAlert)
+                            .setCancelable(true)
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    deleteItem(position);
+                                    Toast.makeText(getActivity(), R.string.truncated, Toast.LENGTH_LONG).show();
+                                }
+                            })
+                            .show();
                 }
             }
         });
@@ -262,6 +263,7 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
             LoanAdapter.notifyDataSetChanged();
 
             toggleEmptyList();
+            amount_owing.setText(db.totalLoan() + " XAF");
         }
     }
 
@@ -280,6 +282,7 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
         LoanAdapter.notifyDataSetChanged();
 
         toggleEmptyList();
+        amount_owing.setText(db.totalLoan() + " XAF");
     }
 
     private void deleteItem(int position) {
@@ -299,23 +302,25 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
         if (db.getLoanCount() > 0) {
             msg_no_data.setVisibility(View.GONE);
             createBtn.setVisibility(View.VISIBLE);
+            amount_owing.setText(String.format("%,d", db.totalLoan()) + " XAF");
         } else {
             msg_no_data.setVisibility(View.VISIBLE);
             createBtn.setVisibility(View.GONE);
+            amount_owing.setText(Integer.toString(0));
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == REQUEST_CODE) {
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(getActivity().getApplicationContext(), "permission granted", Toast.LENGTH_SHORT).show();
 
             }
         }
     }
 
-    public void showDatePickerDialog(){
+    public void showDatePickerDialog() {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 getActivity(),
                 this,
@@ -329,7 +334,7 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-        String date = dayOfMonth + "-" + (month+1) + "-" + year;
+        String date = dayOfMonth + "-" + (month + 1) + "-" + year;
 
         duedate.setText(date);
     }

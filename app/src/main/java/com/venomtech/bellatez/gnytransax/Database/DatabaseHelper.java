@@ -28,7 +28,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "gny_transax";
 
 
-
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -76,7 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT * FROM " +DailyTransaction.TABLE_NAME+ " WHERE " +DailyTransaction.COLUMN_ID + "=" +id;
+        String selectQuery = "SELECT * FROM " + DailyTransaction.TABLE_NAME + " WHERE " + DailyTransaction.COLUMN_ID + "=" + id;
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor != null)
@@ -97,10 +96,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * getting all transactions
-     * */
+     */
     public List<DailyTransaction> getAllTransactions() {
         List<DailyTransaction> trans = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + DailyTransaction.TABLE_NAME+ " ORDER BY " +
+        String selectQuery = "SELECT  * FROM " + DailyTransaction.TABLE_NAME + " ORDER BY " +
                 DailyTransaction.COLUMN_TIMESTAMP + " DESC";
 
 
@@ -169,7 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT * FROM " +Debt.TABLE_NAME+ " WHERE " +Debt.COLUMN_ID + "=" +id;
+        String selectQuery = "SELECT * FROM " + Debt.TABLE_NAME + " WHERE " + Debt.COLUMN_ID + "=" + id;
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor != null)
@@ -192,10 +191,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * getting all debts
-     * */
+     */
     public List<Debt> getAllDebts() {
         List<Debt> trans = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + Debt.TABLE_NAME+ " WHERE "+ Debt.COLUMN_TYPE+ "="+0 +" ORDER BY " +
+        String selectQuery = "SELECT  * FROM " + Debt.TABLE_NAME + " WHERE " + Debt.COLUMN_TYPE + "=" + 0 + " ORDER BY " +
                 Debt.COLUMN_TIMESTAMP + " DESC";
 
 
@@ -236,7 +235,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //count the number of debts
     public int getDebtCount() {
-        String countQuery = "SELECT  * FROM " + Debt.TABLE_NAME+ " WHERE "+ Debt.COLUMN_TYPE+ "="+ 0;
+        String countQuery = "SELECT  * FROM " + Debt.TABLE_NAME + " WHERE " + Debt.COLUMN_TYPE + "=" + 0;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
 
@@ -276,10 +275,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * getting all debts
-     * */
+     */
     public List<Debt> getAllLoans() {
         List<Debt> trans = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + Debt.TABLE_NAME+ " WHERE "+ Debt.COLUMN_TYPE+ "="+1 +" ORDER BY " +
+        String selectQuery = "SELECT  * FROM " + Debt.TABLE_NAME + " WHERE " + Debt.COLUMN_TYPE + "=" + 1 + " ORDER BY " +
                 Debt.COLUMN_TIMESTAMP + " DESC";
 
 
@@ -306,7 +305,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //count the number of loans
     public int getLoanCount() {
-        String countQuery = "SELECT  * FROM " + Debt.TABLE_NAME+ " WHERE "+ Debt.COLUMN_TYPE+ "="+ 1;
+        String countQuery = "SELECT  * FROM " + Debt.TABLE_NAME + " WHERE " + Debt.COLUMN_TYPE + "=" + 1;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
 
@@ -338,7 +337,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT * FROM " +ShoppingList.TABLE_NAME+ " WHERE " +ShoppingList.COLUMN_ID + "=" +id;
+        String selectQuery = "SELECT * FROM " + ShoppingList.TABLE_NAME + " WHERE " + ShoppingList.COLUMN_ID + "=" + id;
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor != null)
@@ -358,7 +357,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * getting all list items
-     * */
+     */
     public List<ShoppingList> getAllListItems() {
         List<ShoppingList> listItems = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + ShoppingList.TABLE_NAME;
@@ -414,17 +413,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    public Cursor bsheetData(String from, String to){
+    public Cursor bsheetData(String from, String to) {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT * FROM "+ DailyTransaction.TABLE_NAME + " WHERE " + DailyTransaction.COLUMN_TIMESTAMP + " BETWEEN '" + from +" 00:00:00' AND '"+ to+" 23:59:59'";
+        String selectQuery = "SELECT * FROM " + DailyTransaction.TABLE_NAME + " WHERE " + DailyTransaction.COLUMN_TIMESTAMP + " BETWEEN '" + from + " 00:00:00' AND '" + to + " 23:59:59'";
         Cursor c = db.rawQuery(selectQuery, null);
         return c;
     }
 
+    public int totalDebt() {
 
-// method to convert the transaction date from the datepicker to full datetime to store in transactions table
+        SQLiteDatabase db = this.getReadableDatabase();
+        int total_debt = 0;
+        String selectQuery = "SELECT " + Debt.COLUMN_AMOUNT + " FROM " + Debt.TABLE_NAME + " WHERE " + Debt.COLUMN_TYPE + "=" + 0;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c.moveToFirst()) {
+            do {
+                total_debt += c.getInt(0);
+            } while (c.moveToNext());
+        }
+
+        return total_debt;
+    }
+
+    public int totalLoan() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        int total_loan = 0;
+        String selectQuery = "SELECT " + Debt.COLUMN_AMOUNT + " FROM " + Debt.TABLE_NAME + " WHERE " + Debt.COLUMN_TYPE + "=" + 1;
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c.moveToFirst()) {
+            do {
+                total_loan += c.getInt(0);
+            } while (c.moveToNext());
+        }
+        return total_loan;
+    }
+
+
+    // method to convert the transaction date from the datepicker to full datetime to store in transactions table
     private String getDateTime() {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date date = new Date();

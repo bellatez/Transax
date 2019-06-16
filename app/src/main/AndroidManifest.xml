@@ -3,6 +3,9 @@
     package="com.venomtech.bellatez.gnytransax">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+
+    <uses-feature android:name="android.hardware.telephony" android:required="true"/>
 
     <application
         android:allowBackup="true"

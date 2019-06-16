@@ -5,20 +5,20 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_transactions"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_send"
             android:title="@string/daily_transactions" />
         <item
             android:id="@+id/nav_debts"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_send"
             android:title="@string/debts" />
 
         <item
             android:id="@+id/nav_loans"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_send"
             android:title="@string/loans" />
         <item
             android:id="@+id/nav_balanceSheet"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_send"
             android:title="@string/balance_sheet" />
     </group>
 
@@ -29,10 +29,10 @@
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/my_shopping_list" />
 
-            <item
-                android:id="@+id/nav_backup"
-                android:icon="@drawable/ic_menu_send"
-                android:title="BackUp my Data" />
+            <!--<item-->
+                <!--android:id="@+id/nav_backup"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="BackUp my Data" />-->
         </menu>
     </item>
 

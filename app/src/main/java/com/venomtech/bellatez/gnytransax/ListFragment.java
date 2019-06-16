@@ -70,6 +70,8 @@ public class ListFragment extends Fragment {
         listAdapter = new ShoppingListAdapter(getActivity(), shoppingLists);
         recyclerView.setAdapter(listAdapter);
 
+        shoppingLists.clear();
+
         db = new DatabaseHelper(getActivity());
         shoppingLists.addAll(db.getAllListItems());
         msg_no_data = v.findViewById(R.id.empty_data_view);

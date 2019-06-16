@@ -45,8 +45,14 @@
     <string name="total_expense">Total Expenditure:</string>
     <string name="profit">Profit</string>
     <string name="percent_profit">% Profit</string>
-    <string name="days">Number of Days</string>
+    <string name="days">Number of transactions: </string>
     <string name="Loss">Loss</string>
     <string name="saveData">Save this Sheet in Storage</string>
     <string name="loans">My Loans</string>
+    <string name="total_owed">Total owed:</string>
+    <string name="total_owing">Total Owing: </string>
+
+    <string name="send_msg_request">Are you sure the debt has been paid?</string>
+    <string name="send_msg">A message will be sent to the debtor, charges will be deducted from your airtime and this will be data deleted</string>
+    <string name="confirm">Confirm</string>
 </resources>
