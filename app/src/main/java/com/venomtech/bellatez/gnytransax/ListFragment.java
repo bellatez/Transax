@@ -23,6 +23,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.venomtech.bellatez.gnytransax.Adapter.ShoppingListAdapter;
 import com.venomtech.bellatez.gnytransax.Database.DatabaseHelper;
 import com.venomtech.bellatez.gnytransax.Database.model.ShoppingList;
@@ -44,6 +46,7 @@ public class ListFragment extends Fragment {
     Button msg_no_data;
     RecyclerView recyclerView;
     FloatingActionButton createBtn;
+    private AdView mAdView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,11 @@ public class ListFragment extends Fragment {
         db = new DatabaseHelper(getActivity());
         shoppingLists.addAll(db.getAllListItems());
         msg_no_data = v.findViewById(R.id.empty_data_view);
+
+//        initialize ads from admob
+        mAdView = v.findViewById(R.id.adView);
+        final AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         /**
          * On long press on RecyclerView item, open alert dialog

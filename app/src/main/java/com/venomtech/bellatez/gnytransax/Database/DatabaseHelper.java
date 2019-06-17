@@ -233,6 +233,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(debt.getId())});
     }
 
+    public int updateAmount(Debt debt) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Debt.COLUMN_AMOUNT, debt.getAmount());
+
+        // updating row
+        return db.update(Debt.TABLE_NAME, values, Debt.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(debt.getId())});
+    }
+
     //count the number of debts
     public int getDebtCount() {
         String countQuery = "SELECT  * FROM " + Debt.TABLE_NAME + " WHERE " + Debt.COLUMN_TYPE + "=" + 0;

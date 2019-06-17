@@ -54,5 +54,11 @@
 
     <string name="send_msg_request">Are you sure the debt has been paid?</string>
     <string name="send_msg">A message will be sent to the debtor, charges will be deducted from your airtime and this will be data deleted</string>
+    <string name="no">NO</string>
+    <string name="send">Send</string>
     <string name="confirm">Confirm</string>
+    <string name="ad_banner_id">ca-app-pub-9711324674477451/1833543072</string>
+    <string name="interstitial_id">ca-app-pub-9711324674477451/8603019455</string>
+    <!--<string name="interstitial_id">ca-app-pub-9711324674477451/8603019455</string>-->
+    <string name="ad_banner_id_test">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

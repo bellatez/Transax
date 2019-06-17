@@ -23,6 +23,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.venomtech.bellatez.gnytransax.Adapter.DailyTransactionAdapter;
 import com.venomtech.bellatez.gnytransax.Database.DatabaseHelper;
 import com.venomtech.bellatez.gnytransax.Database.model.DailyTransaction;
@@ -50,6 +53,7 @@ public class TransactionFragment extends Fragment {
     Button generateSheet;
     RecyclerView recyclerView;
     FloatingActionButton createBtn;
+    private AdView mAdView;
 
 
     public TransactionFragment() {
@@ -87,6 +91,11 @@ public class TransactionFragment extends Fragment {
         msg_no_data = v.findViewById(R.id.empty_data_view);
         timestamp = v.findViewById(R.id.timestamp);
         generateSheet = v.findViewById(R.id.generateSheet);
+
+//        initialize ads from admob
+        mAdView = v.findViewById(R.id.adView);
+        final AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 
         db = new DatabaseHelper(getActivity());
@@ -240,4 +249,5 @@ public class TransactionFragment extends Fragment {
         }
 
     }
+
 }

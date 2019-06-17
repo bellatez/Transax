@@ -28,6 +28,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.venomtech.bellatez.gnytransax.Adapter.DebtAdapter;
 import com.venomtech.bellatez.gnytransax.Adapter.LoanAdapter;
 import com.venomtech.bellatez.gnytransax.Database.DatabaseHelper;
@@ -58,6 +60,7 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
     TextView dialogheading;
     FloatingActionButton createBtn;
     TextView amount_owing;
+    private AdView mAdView;
 
     public LoanFragment() {
         // Required empty public constructor
@@ -94,6 +97,11 @@ public class LoanFragment extends Fragment implements DatePickerDialog.OnDateSet
         msg_no_data = v.findViewById(R.id.empty_data_view);
         db = new DatabaseHelper(getActivity());
         debtList.addAll(db.getAllLoans());
+
+//        initialize ads from admob
+        mAdView = v.findViewById(R.id.adView);
+        final AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {

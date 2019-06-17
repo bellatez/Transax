@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BalanceSheetFragment"
-    android:layout_margin="5dp"
-    android:padding="5dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".BalanceSheetFragment">
 
     <TextView
         android:layout_width="wrap_content"
@@ -265,5 +264,14 @@
         android:layout_marginBottom="40dp"
         android:src="@android:drawable/ic_input_add" />
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        app:adSize="BANNER"
+        app:adUnitId="@string/ad_banner_id_test">
+    </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>

@@ -31,6 +31,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.venomtech.bellatez.gnytransax.Adapter.DebtAdapter;
 import com.venomtech.bellatez.gnytransax.Database.DatabaseHelper;
 import com.venomtech.bellatez.gnytransax.Database.model.Debt;
@@ -58,6 +60,8 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
     TextView dialogheading;
     TextView total_owed;
     FloatingActionButton createBtn;
+    private AdView mAdView;
+    EditText amnt_paid;
 
     public DebtFragment() {
         // Required empty public constructor
@@ -87,6 +91,12 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new MyDividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 16));
+
+
+//        initialize ads from admob
+        mAdView = v.findViewById(R.id.adView);
+        final AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         debtAdapter = new DebtAdapter(getActivity(), debtList);
         recyclerView.setAdapter(debtAdapter);
@@ -245,31 +255,7 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
                     showListDialog(true, debtList.get(position), position);
                 } else if(which == 2){
 
-                    new AlertDialog.Builder(getActivity())
-                            .setTitle(R.string.send_msg_request)
-                            .setMessage(R.string.send_msg)
-                            .setCancelable(true)
-                            .setNegativeButton(android.R.string.cancel, null)
-                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String sms = "Thank You for completing the payment of your debt of " + String.format("%,d", amount) + " XAF. Message sent from Transax mobile app";
-                                    String phoneNum = contact_number;
-                                    if (checkPermission()) {
-                                        //Get the default SmsManager//
-                                        SmsManager smsManager = SmsManager.getDefault();
-
-                                        //Send the SMS//
-                                        smsManager.sendTextMessage(phoneNum, null, sms, null, null);
-                                    } else {
-                                        Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    deleteItem(position);
-                                    Toast.makeText(getActivity(), R.string.truncated, Toast.LENGTH_LONG).show();
-                                }
-                            })
-                            .show();
+                    showPaymentDialog(debtList.get(position), position, contact_number);
 
                 } else {
                     new AlertDialog.Builder(getActivity())
@@ -290,6 +276,93 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
             }
         });
         builder.show();
+    }
+
+    private void showPaymentDialog(final Debt debt, final int position, final String contact) {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getActivity().getApplicationContext());
+        View view = layoutInflaterAndroid.inflate(R.layout.dialog_payment, null);
+
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(getActivity());
+        alertDialogBuilderUserInput.setView(view);
+
+        amnt_paid = view.findViewById(R.id.amnt_paid);
+
+        alertDialogBuilderUserInput
+                .setCancelable(false)
+                .setPositiveButton("save", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogBox, int id) {
+
+                    }
+                })
+                .setNegativeButton("cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogBox, int id) {
+                                dialogBox.cancel();
+                            }
+                        });
+
+        final AlertDialog alertDialog = alertDialogBuilderUserInput.create();
+        alertDialog.show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show toast message when no text is entered
+                if (TextUtils.isEmpty(amnt_paid.getText().toString())) {
+                    Toast.makeText(getActivity(), R.string.validation, Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    final String balance = calculateBalance(Integer.parseInt(amnt_paid.getText().toString()), debtList.get(position).getAmount(), position);
+                    Toast.makeText(getActivity(), R.string.save, Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle(R.string.send_msg_request)
+                            .setMessage(R.string.send_msg)
+                            .setCancelable(true)
+                            .setNegativeButton(R.string.no, null)
+                            .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String sms = "You have paid an amount of " + String.format("%,d", amnt_paid.getText().toString()) + " XAF. You are now owing "+String.format("%,d", balance) +" Message sent from Transax mobile app";
+                                    String phoneNum = contact;
+                                    if (checkPermission()) {
+                                        //Get the default SmsManager//
+                                        SmsManager smsManager = SmsManager.getDefault();
+
+                                        //Send the SMS//
+                                        smsManager.sendTextMessage(phoneNum, null, sms, null, null);
+                                    } else {
+                                        Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }).show();
+                    alertDialog.dismiss();
+                    toggleEmptyList();
+                }
+            }
+        });
+    }
+
+//    calculates the balance from the total money owing
+    private String calculateBalance(int paid, int total, int position) {
+        int balance = 0;
+        Debt debt = debtList.get(position);
+        if (paid <= total){
+            balance = total - paid;
+
+            debt.setAmount(balance);
+
+            db.updateAmount(debt);
+
+            debtList.set(position, debt);
+
+            debtAdapter.notifyDataSetChanged();
+
+            return Integer.toString(balance);
+
+        } else{
+            Toast.makeText(getContext(), "The amount Paid is more than the amount owed", Toast.LENGTH_SHORT).show();
+            return Integer.toString(total);
+        }
     }
 
 

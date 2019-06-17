@@ -25,6 +25,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.venomtech.bellatez.gnytransax.Database.DatabaseHelper;
 import com.venomtech.bellatez.gnytransax.Database.model.DailyTransaction;
 import com.venomtech.bellatez.gnytransax.utils.formatDate;
@@ -53,6 +56,8 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
     CardView bsheet;
     Button createNew;
     FloatingActionButton createBtn;
+    private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
     private DatabaseHelper db;
 
@@ -82,6 +87,15 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
         bsheet = view.findViewById(R.id.bsheet);
         createNew = view.findViewById(R.id.empty_data_view);
         transaction = view.findViewById(R.id.transactions);
+
+//        initialize ads from admob
+        mAdView = view.findViewById(R.id.adView);
+        final AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        mInterstitialAd = new InterstitialAd(getContext());
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_id));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
 
         db = new DatabaseHelper(getActivity());
@@ -164,6 +178,9 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
                     Toast.makeText(getActivity(), R.string.validation, Toast.LENGTH_SHORT).show();
                     return;
                 } else {
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                    }
                     fetchData(from.getText().toString(), to.getText().toString());
                     bsheet.setVisibility(view.VISIBLE);
                     createBtn.setVisibility(View.VISIBLE);
