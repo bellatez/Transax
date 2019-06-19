@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.venomtech.bellatez.gnytransax.Database.model.DailyTransaction;
 import com.venomtech.bellatez.gnytransax.Database.model.Debt;
+import com.venomtech.bellatez.gnytransax.Database.model.Savings;
 import com.venomtech.bellatez.gnytransax.Database.model.ShoppingList;
 import com.venomtech.bellatez.gnytransax.utils.formatDate;
 
@@ -38,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(Debt.CREATE_TABLE);
         db.execSQL(ShoppingList.CREATE_TABLE);
         db.execSQL(DailyTransaction.CREATE_TABLE);
+        db.execSQL(Savings.CREATE_TABLE);
     }
 
     @Override
@@ -47,6 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DailyTransaction.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + Debt.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ShoppingList.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Savings.TABLE_NAME);
 
         // Create tables again
         onCreate(db);

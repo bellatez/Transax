@@ -3,6 +3,7 @@ package com.venomtech.bellatez.gnytransax;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,10 @@ import com.venomtech.bellatez.gnytransax.utils.RecyclerTouchListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import smartdevelop.ir.eram.showcaseviewlib.GuideView;
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType;
+import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener;
 
 
 public class TransactionFragment extends Fragment {
@@ -54,6 +60,8 @@ public class TransactionFragment extends Fragment {
     RecyclerView recyclerView;
     FloatingActionButton createBtn;
     private AdView mAdView;
+    final String PREFS_NAME = "MyPrefsFile";
+    SharedPreferences settings;
 
 
     public TransactionFragment() {
@@ -62,6 +70,7 @@ public class TransactionFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
     }
 
@@ -75,6 +84,7 @@ public class TransactionFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
+        settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
 
         recyclerView = v.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -142,6 +152,9 @@ public class TransactionFragment extends Fragment {
             }
         });
 
+        if (db.getTransactionCount() == 0){
+            ShowIntro("WELCOME TO TRANSAX APP", "press the button to create new sales", 1, msg_no_data);
+        }
         toggleEmptyList();
     }
 
@@ -221,6 +234,7 @@ public class TransactionFragment extends Fragment {
 
 
             toggleEmptyList();
+
         }
     }
 
@@ -242,6 +256,13 @@ public class TransactionFragment extends Fragment {
             msg_no_data.setVisibility(View.GONE);
             generateSheet.setVisibility(View.VISIBLE);
             createBtn.setVisibility(View.VISIBLE);
+            if(db.getTransactionCount() == 1){
+                ShowIntro("How to register sales", "press the button to create new sales",1, createBtn);
+            }else if(db.getTransactionCount() == 1) {
+                ShowIntro("Register another sales", "press the button to create new sales", 1, createBtn);
+            }else if (db.getTransactionCount() == 2){
+                ShowIntro("Get balance sheet", "press the button to generate balance sheet", 3, generateSheet);
+            }
         } else {
             msg_no_data.setVisibility(View.VISIBLE);
             generateSheet.setVisibility(View.GONE);
@@ -250,4 +271,43 @@ public class TransactionFragment extends Fragment {
 
     }
 
+//    Add the showcaseView to teach the user how to use the application the first time a user opens the app
+
+    private void ShowIntro(String title, String text, final int type, final View v) {
+
+        //check if its the first time the application is being launched
+        if (settings.getBoolean("my_first_time", true)) {
+
+            //show the tutorials if its the first time the application is being launched
+            new GuideView.Builder(getActivity())
+                    .setTitle(title)
+                    .setContentText(text)
+                    .setTargetView(v)
+                    .setContentTextSize(14)//optional
+                    .setTitleTextSize(18)//optional
+                    .setDismissType(DismissType.outside)
+                    .setGuideListener(new GuideListener() {
+                        @Override
+                        public void onDismiss(View view) {
+                            if (type == 1) {
+                                showListDialog(null);
+                            }
+                            if (type == 3) {
+                                BalanceSheetFragment nextFrag= new BalanceSheetFragment();
+                                getActivity().getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_holder, nextFrag, "findThisFragment")
+                                        .addToBackStack(null)
+                                        .commit();
+
+                                // record the fact that the app has been started at least once
+//                                settings.edit().putBoolean("my_first_time", false).commit();
+                            }
+                        }
+                    })
+                    .build()
+                    .show();
+
+
+        }
+    }
 }

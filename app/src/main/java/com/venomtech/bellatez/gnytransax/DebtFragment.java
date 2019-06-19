@@ -346,7 +346,7 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
     private String calculateBalance(int paid, int total, int position) {
         int balance = 0;
         Debt debt = debtList.get(position);
-        if (paid <= total){
+        if (paid < total){
             balance = total - paid;
 
             debt.setAmount(balance);
@@ -359,7 +359,11 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
 
             return Integer.toString(balance);
 
-        } else{
+        } else if (paid == total){
+            deleteItem(position);
+            return Integer.toString(total);
+        }
+        else{
             Toast.makeText(getContext(), "The amount Paid is more than the amount owed", Toast.LENGTH_SHORT).show();
             return Integer.toString(total);
         }

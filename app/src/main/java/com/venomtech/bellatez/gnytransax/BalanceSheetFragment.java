@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,6 +38,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import smartdevelop.ir.eram.showcaseviewlib.GuideView;
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType;
+import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener;
+
 
 public class BalanceSheetFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
@@ -58,6 +63,8 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
     FloatingActionButton createBtn;
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
+    final String PREFS_NAME = "MyPrefsFile";
+    SharedPreferences settings;
 
     private DatabaseHelper db;
 
@@ -76,6 +83,7 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
 
         start_date = view.findViewById(R.id.start);
         end_date = view.findViewById(R.id.end);
@@ -126,6 +134,15 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
                         .commit();
             }
         });
+
+        if (settings.getBoolean("my_first_time", true)) {
+            //the app is being launched for first time, do something
+            // first time task
+            ShowIntro("CALCULATE MY BALANCE SHEET", "press here to select start date and end date", 1, createNew);
+
+            // record the fact that the app has been started at least once
+            settings.edit().putBoolean("my_first_time", false).commit();
+        }
     }
 
     private void showDateDialog(final DailyTransaction transaction) {
@@ -279,5 +296,32 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
             new_to = to.getText().toString();
             end_date.setText(dateFormat.formatDate2(date));
         }
+    }
+
+    private void ShowIntro(String title, String text, final int type, final View v) {
+        new GuideView.Builder(getActivity())
+                .setTitle(title)
+                .setContentText(text)
+                .setTargetView(v)
+                .setContentTextSize(14)//optional
+                .setTitleTextSize(18)//optional
+                .setDismissType(DismissType.outside)
+                .setGuideListener(new GuideListener() {
+                    @Override
+                    public void onDismiss(View view) {
+                        if (type == 1) {
+                            showDateDialog(null);
+                        }
+                        if (type == 3) {
+                            TransactionFragment nextFrag= new TransactionFragment();
+                            getActivity().getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_holder, nextFrag, "findThisFragment")
+                                    .addToBackStack(null)
+                                    .commit();
+                        }
+                    }
+                })
+                .build()
+                .show();
     }
 }

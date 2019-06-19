@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        app:adSize="BANNER"
+        app:adSize="SMART_BANNER"
         app:adUnitId="@string/ad_banner_id_test">
     </com.google.android.gms.ads.AdView>
 

@@ -12,7 +12,7 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/fab_margin"
-        android:text="Sales Income Statement"
+        android:text="@string/balance_sheet"
         android:textColor="@color/colorAccent"
         android:textSize="@dimen/lbl_new_note_title" />
     <Button
@@ -244,7 +244,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_top_no_notes"
+        android:layout_marginTop="150dp"
         android:text="@string/msg_no_notes"
         android:textColor="@color/colorPrimaryDark"
         android:background="@color/colorAccent"
@@ -270,7 +270,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        app:adSize="BANNER"
+        app:adSize="SMART_BANNER"
         app:adUnitId="@string/ad_banner_id_test">
     </com.google.android.gms.ads.AdView>
 

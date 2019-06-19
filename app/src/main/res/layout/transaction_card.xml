@@ -5,12 +5,12 @@
     android:layout_height="wrap_content"
     android:id="@+id/card_view"
     android:background="@color/timestamp"
-    android:layout_margin="5dp"
-    android:padding="10dp">
+    android:layout_margin="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="5dp"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
