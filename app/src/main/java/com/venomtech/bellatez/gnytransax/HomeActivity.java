@@ -1,31 +1,26 @@
 package com.venomtech.bellatez.gnytransax;
 
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
-import smartdevelop.ir.eram.showcaseviewlib.GuideView;
-import smartdevelop.ir.eram.showcaseviewlib.config.DismissType;
-import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener;
-
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private AdView mAdView;
+    InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +31,10 @@ public class HomeActivity extends AppCompatActivity
 
         MobileAds.initialize(this, "ca-app-pub-9711324674477451~5265150491");
 
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        loadInterstitialAd();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -44,7 +43,7 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        displayFragment(R.id.nav_transactions);
+        displayFragment(R.id.nav_main);
     }
 
     @Override
@@ -61,6 +60,9 @@ public class HomeActivity extends AppCompatActivity
         Fragment fragment = null;
 
         switch (id) {
+            case R.id.nav_main:
+                fragment = new HomeFragment();
+                break;
             case R.id.nav_transactions:
                 fragment = new TransactionFragment();
                 break;
@@ -73,6 +75,9 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_list:
                 fragment = new ListFragment();
                 break;
+            case R.id.nav_savings:
+                fragment = new SavingsFragment();
+                break;
             case R.id.nav_balanceSheet:
                 fragment = new BalanceSheetFragment();
         }
@@ -80,7 +85,6 @@ public class HomeActivity extends AppCompatActivity
         if(fragment != null){
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_holder, fragment);
-//            to prevent fragment overlapping on back press
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
@@ -96,6 +100,21 @@ public class HomeActivity extends AppCompatActivity
        displayFragment(item.getItemId());
 
         return true;
+    }
+
+    private void showAdvertisement() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            finish();
+        }
+    }
+
+    private void loadInterstitialAd() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
     }
 
 

@@ -314,28 +314,28 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
                 } else {
                     final String balance = calculateBalance(Integer.parseInt(amnt_paid.getText().toString()), debtList.get(position).getAmount(), position);
                     Toast.makeText(getActivity(), R.string.save, Toast.LENGTH_SHORT).show();
-                    new AlertDialog.Builder(getActivity())
-                            .setTitle(R.string.send_msg_request)
-                            .setMessage(R.string.send_msg)
-                            .setCancelable(true)
-                            .setNegativeButton(R.string.no, null)
-                            .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String sms = "You have paid an amount of " + String.format("%,d", amnt_paid.getText().toString()) + " XAF. You are now owing "+String.format("%,d", balance) +" Message sent from Transax mobile app";
-                                    String phoneNum = contact;
-                                    if (checkPermission()) {
-                                        //Get the default SmsManager//
-                                        SmsManager smsManager = SmsManager.getDefault();
-
-                                        //Send the SMS//
-                                        smsManager.sendTextMessage(phoneNum, null, sms, null, null);
-                                    } else {
-                                        Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }).show();
-                    alertDialog.dismiss();
+//                    new AlertDialog.Builder(getActivity())
+//                            .setTitle(R.string.send_msg_request)
+//                            .setMessage(R.string.send_msg)
+//                            .setCancelable(true)
+//                            .setNegativeButton(R.string.no, null)
+//                            .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    String sms = "You have paid an amount of " + String.format("%,d", amnt_paid.getText().toString()) + " XAF. You are now owing "+String.format("%,d", balance) +" Message sent from Transax mobile app";
+//                                    String phoneNum = contact;
+//                                    if (checkPermission()) {
+//                                        //Get the default SmsManager//
+//                                        SmsManager smsManager = SmsManager.getDefault();
+//
+//                                        //Send the SMS//
+//                                        smsManager.sendTextMessage(phoneNum, null, sms, null, null);
+//                                    } else {
+//                                        Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//                            }).show();
+//                    alertDialog.dismiss();
                     toggleEmptyList();
                 }
             }
@@ -437,7 +437,7 @@ public class DebtFragment extends Fragment implements DatePickerDialog.OnDateSet
     }
 
     private void requestPermission() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS}, REQUEST_CODE);
+//        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS}, REQUEST_CODE);
         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CODE);
 
     }

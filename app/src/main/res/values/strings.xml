@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Transax</string>
+    <string name="app_name">Buk!per</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Transax</string>
@@ -43,10 +43,10 @@
     <string name="to">To:</string>
     <string name="total_income">Total Income</string>
     <string name="total_expense">Total Expenditure:</string>
-    <string name="profit">Profit</string>
+    <string name="profit">Sales Profit</string>
     <string name="percent_profit">% Profit</string>
     <string name="days">Number of transactions: </string>
-    <string name="Loss">Loss</string>
+    <string name="Loss">Sales Loss</string>
     <string name="saveData">Save this Sheet in Storage</string>
     <string name="loans">My Loans</string>
     <string name="total_owed">Total owed:</string>
@@ -60,5 +60,6 @@
     <string name="ad_banner_id_test">ca-app-pub-9711324674477451/1833543072</string>
     <!--<string name="interstitial_id">ca-app-pub-9711324674477451/8603019455</string>-->
     <string name="interstitial_id">ca-app-pub-9711324674477451/8603019455</string>
+    <string name="home">Home</string>
     <!--<string name="ad_banner_id_test">ca-app-pub-3940256099942544/6300978111</string>-->
 </resources>

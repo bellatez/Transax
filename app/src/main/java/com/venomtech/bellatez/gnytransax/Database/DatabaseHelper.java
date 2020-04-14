@@ -329,6 +329,104 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count;
     }
 
+    // Savings CRUD
+
+    //create savings
+    public long insertSavings(Integer amount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(Savings.COLUMN_AMOUNT, amount);
+        values.put(Savings.COLUMN_TIMESTAMP, getDateTime());
+
+        long id = db.insert(Savings.TABLE_NAME, null, values);
+
+        db.close();
+        return id;
+    }
+
+    //get single list item
+    public Savings getSavings(long id) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + Savings.TABLE_NAME + " WHERE " + Savings.COLUMN_ID + "=" + id;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        // prepare note object
+        Savings listItem = new Savings(
+                cursor.getInt(cursor.getColumnIndex(Savings.COLUMN_ID)),
+                cursor.getInt(cursor.getColumnIndex(Savings.COLUMN_AMOUNT)),
+                cursor.getString(cursor.getColumnIndex(Savings.COLUMN_TIMESTAMP)));
+
+        // close the db connection
+        cursor.close();
+
+        return listItem;
+    }
+
+    /**
+     * getting all list items
+     */
+    public List<Savings> getAllSavings() {
+        List<Savings> listItems = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " + Savings.TABLE_NAME;
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Savings td = new Savings();
+                td.setId(c.getInt((c.getColumnIndex(Savings.COLUMN_ID))));
+                td.setAmount((c.getInt(c.getColumnIndex(Savings.COLUMN_AMOUNT))));
+                td.setTimestamp((c.getString(c.getColumnIndex(Savings.COLUMN_TIMESTAMP))));
+
+                listItems.add(td);
+            } while (c.moveToNext());
+        }
+        db.close();
+        return listItems;
+    }
+
+    public int updateSavings(Savings listItem) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Savings.COLUMN_AMOUNT, listItem.getAmount());
+        values.put(Savings.COLUMN_TIMESTAMP, getDateTime());
+
+        // updating row
+        return db.update(ShoppingList.TABLE_NAME, values, ShoppingList.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(listItem.getId())});
+    }
+
+    //delete list item
+    public void deleteSavings(Savings list) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(Savings.TABLE_NAME, Savings.COLUMN_ID + " = ? ",
+                new String[]{String.valueOf(list.getId())});
+        db.close();
+    }
+
+    //count the number of list items
+    public int getSavingsCount() {
+        String countQuery = "SELECT  * FROM " + Savings.TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+
+        return count;
+    }
+
     // ShoppingList CRUD
 
     //create list item

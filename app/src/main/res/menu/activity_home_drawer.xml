@@ -4,6 +4,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_main"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/home" />
+        <item
             android:id="@+id/nav_transactions"
             android:icon="@drawable/ic_menu_send"
             android:title="@string/daily_transactions" />
@@ -28,6 +32,12 @@
                 android:id="@+id/nav_list"
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/my_shopping_list" />
+
+            <item
+                android:id="@+id/nav_savings"
+                android:icon="@drawable/ic_menu_send"
+                android:title="My Savings" />
+
 
             <!--<item-->
                 <!--android:id="@+id/nav_backup"-->

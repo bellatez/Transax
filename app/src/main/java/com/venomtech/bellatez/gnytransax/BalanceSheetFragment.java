@@ -135,14 +135,6 @@ public class BalanceSheetFragment extends Fragment implements DatePickerDialog.O
             }
         });
 
-        if (settings.getBoolean("my_first_time", true)) {
-            //the app is being launched for first time, do something
-            // first time task
-            ShowIntro("CALCULATE MY BALANCE SHEET", "press here to select start date and end date", 1, createNew);
-
-            // record the fact that the app has been started at least once
-            settings.edit().putBoolean("my_first_time", false).commit();
-        }
     }
 
     private void showDateDialog(final DailyTransaction transaction) {
